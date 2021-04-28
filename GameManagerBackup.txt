@@ -1,0 +1,141 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System;
+using UnityEngine.Assertions;
+
+public class GameManager : MonoBehaviour
+{
+   
+
+    public System.Random r = new System.Random();
+    public GameObject InstructionScreen;
+    public GameObject SymbolScreen;
+    public GameObject LevelOneScreen;
+    public GameObject EndScreen;
+
+    public string A_to_Z="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+   
+
+    public Sprite[] LevelOneSymbols;
+    public Sprite[] LevelOneLetters;
+    public Sprite[] LevelOneQuestionSymbols;
+
+    public Image SymbolImage;
+    public Image[] QuestionSymbols;
+    public Image LetterImage;
+    
+
+    public InputField Answer;
+
+    public string LevelOneAnswer = "";
+    int []ran=new int[30];
+    int []cp=new int[30];
+    
+    
+
+    public Text Result;
+    // Start is called before the first frame update
+    void Start()
+    {
+        StartCoroutine("ShowInstructions");
+    }
+    private IEnumerator ShowInstructions()
+    {
+        InstructionScreen.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        InstructionScreen.SetActive(false);
+        StartCoroutine("ShowSymbolScreen");
+    }
+
+  public IEnumerator ShowSymbolScreen()
+    {
+        SymbolScreen.SetActive(true);
+    
+        
+        for (int i =0 ; i<4 ; i++){
+        
+       
+           ran[i]=r.Next(0,LevelOneSymbols.Length);
+           cp[i]=r.Next(0,LevelOneLetters.Length);
+           // cp = ran;
+         // Array.Copy(ran, cp, 4);
+
+         // Assert.AreEqual(ran,cp);
+          
+
+           
+
+           
+        
+           
+          // Debug.Log(i);
+           Debug.Log(ran[i]);
+           Debug.Log(cp[i]);
+
+           
+
+
+       SymbolImage.sprite = LevelOneSymbols[ran[i]];
+        
+        LetterImage.sprite = LevelOneLetters[cp[i]];
+    yield return new WaitForSeconds(3f);
+        }
+        
+     SymbolScreen.SetActive(false);
+  
+     LevelOneScreen.SetActive(true);
+     displ();
+        
+        
+    }
+public void displ()
+    {
+        int [] sequence =new int[] {0,1,2,3};
+       //string finalAnswer = "";
+       Shuffle(sequence);
+        for (int i = 0; i < 4; i++)
+        {
+            
+            Debug.Log(LevelOneSymbols.Length);
+         Debug.Log(ran[i]);
+int index = ran[sequence[i]];
+QuestionSymbols[i].sprite = LevelOneSymbols[index];
+        //QuestionSymbols[i].sprite = LevelOneSymbols[ran[i]];
+            //finalAnswer = finalAnswer + A_to_Z[cp];
+
+        }
+        
+    }
+    public void Shuffle(int[] array)
+{
+    System.Random random = new System.Random();
+    int n = array.Length;
+    while (n > 1)
+    {
+        n--;
+        int i = random.Next(n + 1);
+        int temp = array[i];
+        array[i] = array[n];
+        array[n] = temp;
+    }
+}
+
+
+    public void CheckAnswer()
+    {
+        LevelOneScreen.SetActive(false);
+        Answer.text = Answer.text.ToUpper();
+        if(Answer.text.Equals(LevelOneAnswer))
+        {
+            Result.text = "Correct Answer";
+        }
+        else
+        {
+            Result.text = "Wrong Answer";
+        }
+        EndScreen.SetActive(true);
+    }
+
+}
